@@ -4,16 +4,11 @@
 <head>
     <title>Smart Plant Green House</title>
 
-    <!-- Firebase v8 (namespaced) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- FIX: Firebase v8.10.1  -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .card { padding: 15px; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; }
-        input { display: block; margin: 8px 0; padding: 8px; width: 200px; }
-    </style>
 </head>
 
 <body>
@@ -29,19 +24,19 @@
     <div id="dashboard" style="display:none;">
         <h1>Dashboard</h1>
 
-        <div class="card">
+        <div>
             <h3>Kelembaban Tanah</h3>
             <div id="soilMoisture">-- %</div>
             <span id="soilStatus"></span>
         </div>
 
-        <div class="card">
+        <div>
             <h3>Tingkat Cahaya</h3>
             <div id="lightLevel">-- %</div>
             <span id="lightStatus"></span>
         </div>
 
-        <div class="card">
+        <div>
             <h3>Gerakan (PIR)</h3>
             <div id="motion">--</div>
             <span id="motionStatus"></span>
@@ -62,7 +57,6 @@
             appId: "1:689895916762:web:92f985fe660356ffecd1e3"
         };
 
-        // Init Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
@@ -92,12 +86,12 @@
             });
         });
 
-        // LISTEN SENSOR DATA
+        // SENSOR UPDATES
         function listenToSensors() {
-            const sensorRef = firebase.database().ref("greenhouse/sensors");
+            const ref = firebase.database().ref("greenhouse/sensors");
 
-            sensorRef.on("value", (snapshot) => {
-                const d = snapshot.val() || {};
+            ref.on("value", snap => {
+                const d = snap.val() || {};
 
                 updateSoil(d.soilMoisture);
                 updateLight(d.lightLevel);
@@ -105,24 +99,22 @@
             });
         }
 
-        function updateSoil(value = 0) {
-            document.getElementById("soilMoisture").innerText = value + " %";
-            const status = value < 30 ? "Kering" :
-                value < 70 ? "Cukup" : "Basah";
-            document.getElementById("soilStatus").innerText = status;
+        function updateSoil(v = 0) {
+            document.getElementById("soilMoisture").innerText = v + " %";
+            document.getElementById("soilStatus").innerText =
+                v < 30 ? "Kering" : v < 70 ? "Cukup" : "Basah";
         }
 
-        function updateLight(value = 0) {
-            document.getElementById("lightLevel").innerText = value + " %";
-            const status = value < 30 ? "Redup" :
-                value < 70 ? "Cukup Terang" : "Terang";
-            document.getElementById("lightStatus").innerText = status;
+        function updateLight(v = 0) {
+            document.getElementById("lightLevel").innerText = v + " %";
+            document.getElementById("lightStatus").innerText =
+                v < 30 ? "Redup" : v < 70 ? "Cukup" : "Terang";
         }
 
-        function updateMotion(value = false) {
-            document.getElementById("motion").innerText = value ? "Terdeteksi" : "Tidak Terdeteksi";
+        function updateMotion(v = false) {
+            document.getElementById("motion").innerText = v ? "Terdeteksi" : "Tidak";
             document.getElementById("motionStatus").innerText =
-                value ? "Ada Gerakan" : "Aman";
+                v ? "Ada Gerakan" : "Aman";
         }
     </script>
 </body>
