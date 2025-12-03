@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Smart Plant Green House</title>
 
-    <!-- FIX: Firebase v8.10.1  -->
+    <!-- FIX: Firebase v8 (pastikan ini SATU-SATUNYA script Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 </head>
-
 <body>
+
     <!-- LOGIN -->
     <div id="loginForm">
         <h2>Smart Plant Green House</h2>
@@ -46,7 +45,7 @@
     </div>
 
     <script>
-        // Firebase config
+        // CONFIG WAJIB ADA databaseURL
         const firebaseConfig = {
             apiKey: "AIzaSyB3TeXD8gNZBmrXAk2fQmLm-SIE0K7gjoA",
             authDomain: "testled-5754b.firebaseapp.com",
@@ -57,6 +56,7 @@
             appId: "1:689895916762:web:92f985fe660356ffecd1e3"
         };
 
+        // INIT FIREBASE V8
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
@@ -86,37 +86,36 @@
             });
         });
 
-        // SENSOR UPDATES
         function listenToSensors() {
-            const ref = firebase.database().ref("greenhouse/sensors");
+            const ref = db.ref("greenhouse/sensors");
 
-            ref.on("value", snap => {
-                const d = snap.val() || {};
+            ref.on("value", snapshot => {
+                const d = snapshot.val() || {};
 
-                updateSoil(d.soilMoisture);
-                updateLight(d.lightLevel);
-                updateMotion(d.motion);
+                updateSoil(d.soilMoisture || 0);
+                updateLight(d.lightLevel || 0);
+                updateMotion(d.motion || false);
             });
         }
 
-        function updateSoil(v = 0) {
+        function updateSoil(v) {
             document.getElementById("soilMoisture").innerText = v + " %";
             document.getElementById("soilStatus").innerText =
                 v < 30 ? "Kering" : v < 70 ? "Cukup" : "Basah";
         }
 
-        function updateLight(v = 0) {
+        function updateLight(v) {
             document.getElementById("lightLevel").innerText = v + " %";
             document.getElementById("lightStatus").innerText =
                 v < 30 ? "Redup" : v < 70 ? "Cukup" : "Terang";
         }
 
-        function updateMotion(v = false) {
+        function updateMotion(v) {
             document.getElementById("motion").innerText = v ? "Terdeteksi" : "Tidak";
             document.getElementById("motionStatus").innerText =
                 v ? "Ada Gerakan" : "Aman";
         }
     </script>
-</body>
 
+</body>
 </html>
