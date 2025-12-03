@@ -59,6 +59,10 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
+        // AMBIL ELEMENT HTML
+        const loginForm = document.getElementById("loginForm");
+        const dashboard = document.getElementById("dashboard");
+
         // LOGIN DAN LOGOUT
         document.getElementById("loginBtn").addEventListener("click", () => {
             const email = document.getElementById("email").value;
@@ -73,14 +77,12 @@
                 .catch(err => alert("Login gagal: " + err.message));
         });
 
-
         document.getElementById("logoutBtn").addEventListener("click", () => {
             auth.signOut().then(() => {
                 dashboard.style.display = "none";
                 loginForm.style.display = "block";
             });
         });
-
 
         // MENAMPILKAN DATA SENSOR
         function listenToSensors() {
@@ -121,5 +123,4 @@
         }
     </script>
 </body>
-
 </html>
