@@ -1,11 +1,108 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Smart Plant Green House</title>
+
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <!-- ===== CSS DESIGN ===== -->
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #e8f5e9; /* hijau muda */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        /* LOGIN BOX */
+        #loginForm {
+            width: 320px;
+            margin: 120px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        #loginForm input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1.5px solid #81c784;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #loginForm button {
+            width: 95%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #2e7d32;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #loginForm button:hover {
+            background: #1b5e20;
+        }
+
+        /* DASHBOARD */
+        #dashboard {
+            width: 85%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #1b5e20;
+        }
+
+        /* Sensor value */
+        .value-box {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2e7d32;
+            padding: 10px 0;
+        }
+
+        #logoutBtn {
+            padding: 10px 20px;
+            background: #c62828;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #logoutBtn:hover {
+            background: #8e0000;
+        }
+    </style>
 </head>
+
 <body>
     <!-- LOGIN -->
     <div id="loginForm">
@@ -14,26 +111,32 @@
         <input type="password" id="password" placeholder="Password">
         <button id="loginBtn">Login</button>
     </div>
+
     <!-- DASHBOARD -->
     <div id="dashboard" style="display:none;">
         <h1>Dashboard</h1>
-        <div>
+
+        <div class="card">
             <h3>Kelembaban Tanah</h3>
-            <div id="soilMoisture">-- %</div>
+            <div class="value-box" id="soilMoisture">-- %</div>
             <span id="soilStatus"></span>
         </div>
-        <div>
+
+        <div class="card">
             <h3>Tingkat Cahaya</h3>
-            <div id="lightLevel">-- %</div>
+            <div class="value-box" id="lightLevel">-- %</div>
             <span id="lightStatus"></span>
         </div>
-        <div>
+
+        <div class="card">
             <h3>Gerakan (PIR)</h3>
-            <div id="motion">--</div>
+            <div class="value-box" id="motion">--</div>
             <span id="motionStatus"></span>
         </div>
+
         <button id="logoutBtn">Logout</button>
     </div>
+
     <script>
         // CONFIG WAJIB ADA databaseURL
         const firebaseConfig = {
@@ -52,10 +155,12 @@
 
         const loginForm = document.getElementById("loginForm");
         const dashboard = document.getElementById("dashboard");
+
         // LOGIN
         document.getElementById("loginBtn").addEventListener("click", () => {
             const email = document.getElementById("email").value;
             const pass = document.getElementById("password").value;
+
             auth.signInWithEmailAndPassword(email, pass)
                 .then(() => {
                     loginForm.style.display = "none";
@@ -64,6 +169,7 @@
                 })
                 .catch(err => alert("Login gagal: " + err.message));
         });
+
         // LOGOUT
         document.getElementById("logoutBtn").addEventListener("click", () => {
             auth.signOut().then(() => {
@@ -72,12 +178,12 @@
             });
         });
 
+        // Database listener
         function listenToSensors() {
             const ref = db.ref("greenhouse/sensors");
 
             ref.on("value", snapshot => {
                 const d = snapshot.val() || {};
-
                 updateSoil(d.soilMoisture || 0);
                 updateLight(d.lightLevel || 0);
                 updateMotion(d.motion || false);
@@ -93,7 +199,7 @@
         function updateLight(v) {
             document.getElementById("lightLevel").innerText = v + " %";
             document.getElementById("lightStatus").innerText =
-                v < 30 ? "Redup" : v < 70 ? "Cukup" : "Terang";
+                v < 30 ? "Redup" : v < 70 ? "Cukup Terang" : "Terang";
         }
 
         function updateMotion(v) {
@@ -103,4 +209,5 @@
         }
     </script>
 </body>
+
 </html>
