@@ -2,15 +2,11 @@
 <html>
 <head>
     <title>Smart Plant Green House</title>
-
-    <!-- FIX: Firebase v8 (pastikan ini SATU-SATUNYA script Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 </head>
 <body>
-
     <!-- LOGIN -->
     <div id="loginForm">
         <h2>Smart Plant Green House</h2>
@@ -18,32 +14,26 @@
         <input type="password" id="password" placeholder="Password">
         <button id="loginBtn">Login</button>
     </div>
-
     <!-- DASHBOARD -->
     <div id="dashboard" style="display:none;">
         <h1>Dashboard</h1>
-
         <div>
             <h3>Kelembaban Tanah</h3>
             <div id="soilMoisture">-- %</div>
             <span id="soilStatus"></span>
         </div>
-
         <div>
             <h3>Tingkat Cahaya</h3>
             <div id="lightLevel">-- %</div>
             <span id="lightStatus"></span>
         </div>
-
         <div>
             <h3>Gerakan (PIR)</h3>
             <div id="motion">--</div>
             <span id="motionStatus"></span>
         </div>
-
         <button id="logoutBtn">Logout</button>
     </div>
-
     <script>
         // CONFIG WAJIB ADA databaseURL
         const firebaseConfig = {
@@ -56,19 +46,16 @@
             appId: "1:689895916762:web:92f985fe660356ffecd1e3"
         };
 
-        // INIT FIREBASE V8
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
         const loginForm = document.getElementById("loginForm");
         const dashboard = document.getElementById("dashboard");
-
         // LOGIN
         document.getElementById("loginBtn").addEventListener("click", () => {
             const email = document.getElementById("email").value;
             const pass = document.getElementById("password").value;
-
             auth.signInWithEmailAndPassword(email, pass)
                 .then(() => {
                     loginForm.style.display = "none";
@@ -77,7 +64,6 @@
                 })
                 .catch(err => alert("Login gagal: " + err.message));
         });
-
         // LOGOUT
         document.getElementById("logoutBtn").addEventListener("click", () => {
             auth.signOut().then(() => {
@@ -116,6 +102,5 @@
                 v ? "Ada Gerakan" : "Aman";
         }
     </script>
-
 </body>
 </html>
