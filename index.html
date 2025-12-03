@@ -10,6 +10,8 @@
 
     <!-- ===== CSS DESIGN ===== -->
     <style>
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
         body {
             font-family: Arial, Helvetica, sans-serif;
             background: #e8f5e9;
@@ -17,11 +19,14 @@
             padding: 0;
         }
 
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             font-weight: 600;
             color: #2e7d32;
         }
 
+        /* LOGIN CARD */
         #loginForm {
             width: 320px;
             margin: 120px auto;
@@ -57,12 +62,14 @@
             background: #1b5e20;
         }
 
+        /* DASHBOARD */
         #dashboard {
             width: 85%;
             max-width: 900px;
             margin: 40px auto;
         }
 
+        /* CARD */
         .card {
             background: white;
             padding: 20px;
@@ -71,11 +78,39 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
         }
 
+        /* TITLE + ICON */
         .card h3 {
             margin-top: 0;
             color: #1b5e20;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
         }
 
+        .card h3::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: #2e7d32;
+        }
+
+        /* ICON CUSTOM FOR EACH CARD */
+        .card:nth-of-type(1) h3::before {
+            content: "\f043";
+            /* water droplet */
+        }
+
+        .card:nth-of-type(2) h3::before {
+            content: "\f185";
+            /* sun */
+        }
+
+        .card:nth-of-type(3) h3::before {
+            content: "\f554";
+            /* walking person */
+        }
+
+        /* VALUE BOX */
         .value-box {
             font-size: 32px;
             font-weight: bold;
@@ -83,6 +118,7 @@
             padding: 10px 0;
         }
 
+        /* LOGOUT BUTTON */
         #logoutBtn {
             padding: 10px 20px;
             background: #c62828;
