@@ -4,10 +4,16 @@
 <head>
     <title>Smart Plant Green House</title>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+    <!-- Firebase v8 (namespaced) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .card { padding: 15px; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; }
+        input { display: block; margin: 8px 0; padding: 8px; width: 200px; }
+    </style>
 </head>
 
 <body>
@@ -21,7 +27,7 @@
 
     <!-- DASHBOARD -->
     <div id="dashboard" style="display:none;">
-        <h1>Smart Plant Green House</h1>
+        <h1>Dashboard</h1>
 
         <div class="card">
             <h3>Kelembaban Tanah</h3>
@@ -45,6 +51,7 @@
     </div>
 
     <script>
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyB3TeXD8gNZBmrXAk2fQmLm-SIE0K7gjoA",
             authDomain: "testled-5754b.firebaseapp.com",
@@ -55,15 +62,15 @@
             appId: "1:689895916762:web:92f985fe660356ffecd1e3"
         };
 
-        const app = firebase.initializeApp(firebaseConfig);
+        // Init Firebase
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        // AMBIL ELEMENT HTML
         const loginForm = document.getElementById("loginForm");
         const dashboard = document.getElementById("dashboard");
 
-        // LOGIN DAN LOGOUT
+        // LOGIN
         document.getElementById("loginBtn").addEventListener("click", () => {
             const email = document.getElementById("email").value;
             const pass = document.getElementById("password").value;
@@ -77,6 +84,7 @@
                 .catch(err => alert("Login gagal: " + err.message));
         });
 
+        // LOGOUT
         document.getElementById("logoutBtn").addEventListener("click", () => {
             auth.signOut().then(() => {
                 dashboard.style.display = "none";
@@ -84,9 +92,9 @@
             });
         });
 
-        // MENAMPILKAN DATA SENSOR
+        // LISTEN SENSOR DATA
         function listenToSensors() {
-            const sensorRef = firebase.database().ref("greenhouse/sensor");
+            const sensorRef = firebase.database().ref("greenhouse/sensors");
 
             sensorRef.on("value", (snapshot) => {
                 const d = snapshot.val() || {};
@@ -97,30 +105,26 @@
             });
         }
 
-        function updateSoil(value) {
+        function updateSoil(value = 0) {
             document.getElementById("soilMoisture").innerText = value + " %";
-            const status =
-                value < 30 ? "Kering" :
-                    value < 70 ? "Cukup" :
-                        "Basah";
+            const status = value < 30 ? "Kering" :
+                value < 70 ? "Cukup" : "Basah";
             document.getElementById("soilStatus").innerText = status;
         }
 
-        function updateLight(value) {
+        function updateLight(value = 0) {
             document.getElementById("lightLevel").innerText = value + " %";
-            const status =
-                value < 30 ? "Redup" :
-                    value < 70 ? "Cukup Terang" :
-                        "Terang";
+            const status = value < 30 ? "Redup" :
+                value < 70 ? "Cukup Terang" : "Terang";
             document.getElementById("lightStatus").innerText = status;
         }
 
-        function updateMotion(value) {
+        function updateMotion(value = false) {
             document.getElementById("motion").innerText = value ? "Terdeteksi" : "Tidak Terdeteksi";
-            const status =
+            document.getElementById("motionStatus").innerText =
                 value ? "Ada Gerakan" : "Aman";
-            document.getElementById("motionStatus").innerText = status;
         }
     </script>
 </body>
+
 </html>
